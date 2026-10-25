@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Laboratorium 1 - Domek i choinka</title>
+        <meta charset="UTF-8">
+        <style>body { margin: 0; overflow: hidden; }</style>
+        <script src="three.js"></script>
+    </head>
+    <body>
+        <script>
+            var renderer = new THREE.WebGLRenderer({antialias: true});
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            renderer.setClearColor(0x87CEEB);
+            document.body.appendChild(renderer.domElement);
+
+            var scene = new THREE.Scene();
+
+            var camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 1, 100);
+            camera.position.set(0, 0, 10);
+            camera.lookAt(scene.position);
+            scene.add(camera);
+
+            function addShape(points, color, x, y) {
+                var geometry = new THREE.Geometry();
+                points.forEach(function (p) {
+                    geometry.vertices.push(new THREE.Vector3(p[0], p[1], 0.0));
+                });
+                for (var i = 1; i < points.length - 1; i++) {
+                    geometry.faces.push(new THREE.Face3(0, i, i + 1));
+                }
+                var mesh = new THREE.Mesh(geometry, new THREE.MeshBasicMaterial({color: color, side: THREE.DoubleSide}));
+                mesh.position.set(x, y, 0.0);
+                scene.add(mesh);
+            }
+
+            var triangle = [[0.0, 1.0], [-1.0, -1.0], [1.0, -1.0]];
+            var square = [[-1.0, 1.0], [1.0, 1.0], [1.0, -1.0], [-1.0, -1.0]];
+
+            // Trawa
+            addShape([[-20.0, 0.0], [20.0, 0.0], [20.0, -10.0], [-20.0, -10.0]], 0x4CAF50, 0.0, -2.0);
+
+            // Choinka z trzech przesuniętych trójkątów
+            addShape(triangle, 0x006400, 2.0, -1.0);
+            addShape(triangle, 0x008000, 2.0, 0.0);
+            addShape(triangle, 0x228B22, 2.0, 1.0);
+
+            // Domek z kwadratu i trójkąta
+            addShape(square, 0xF5DEB3, -2.0, -1.0);
+            addShape(triangle, 0xB22222, -2.0, 1.0);
+
+            renderer.render(scene, camera);
+        </script>
+    </body>
+</html>
